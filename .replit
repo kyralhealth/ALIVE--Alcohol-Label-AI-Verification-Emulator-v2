@@ -1,0 +1,23 @@
+modules = ["python-3.12"]
+
+# Click "Run" in the Replit workspace to start the dev server.
+run = "python -m app.main"
+
+[env]
+# Demo mode lets the app run before you've added an API key. Remove this
+# (or set it in Secrets) once ANTHROPIC_API_KEY is configured.
+LABEL_DEMO = "1"
+
+[nix]
+channel = "stable-24_05"
+
+# Maps Replit's external HTTPS port to the app's internal port.
+[[ports]]
+localPort = 8000
+externalPort = 80
+
+# "Deploy" -> Autoscale uses this. $PORT is injected by Replit; app/main.py
+# reads it. Drop LABEL_DEMO here once your Secret key is set for real reads.
+[deployment]
+deploymentTarget = "autoscale"
+run = ["python", "-m", "app.main"]
