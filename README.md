@@ -1,4 +1,4 @@
-# TTB Label Verifier
+# Alcohol Label AI-Verification Emulator (ALIVE)
 
 AI-assisted verification of alcohol beverage label artwork against COLA
 application data. An agent (or a batch of up to 300 labels) gets a
@@ -7,7 +7,7 @@ with per-field detail.
 
 `label image → Claude (transcription only) → deterministic rule engine → verdict`
 
-## Quick start
+## Quick Start
 
 ```bash
 python3 -m venv .venv
@@ -37,7 +37,7 @@ Regenerate the sample labels:
 .venv/bin/python scripts/generate_samples.py
 ```
 
-## What it checks
+## Checklist
 
 | Check | How |
 |---|---|
@@ -50,9 +50,9 @@ Regenerate the sample labels:
 | Government warning — bold | A vision model can't certify typography, so this **never silently passes**: clearly-not-bold → mismatch, otherwise flagged for human confirmation |
 | Image legibility | Poor photos (angle, glare, blur) downgrade a pass to "needs review" instead of guessing |
 
-## Architecture & key decisions
+## Architecture & Key Decisions
 
-**The model transcribes; the code decides.** Claude's only job is to read the
+**The Model Transcribes while the Code Decides.** Claude's only job is to read the
 label and return each field *verbatim* (structured outputs guarantee parseable
 JSON). Every compliance verdict comes from `app/comparison.py` — plain,
 deterministic, unit-tested Python (32 tests). Rationale:
@@ -65,7 +65,7 @@ deterministic, unit-tested Python (32 tests). Rationale:
 - Jenny's "the warning must be exact" requirement is a string comparison, not
   an LLM opinion.
 
-**Latency budget: ~5 seconds.** The previous vendor pilot died at 30–40s/label.
+**Latency Budget: ~5 seconds.** The previous vendor pilot died at 30–40s/label.
 Choices made for speed:
 
 - Default model is `claude-haiku-4-5` (fast vision model). Override with
@@ -77,12 +77,12 @@ Choices made for speed:
 - Batches run 4 labels concurrently; each result shows its own elapsed time so
   slow responses are visible, not mysterious.
 
-**Batch uploads** (Janet's ask): up to 300 images + one CSV
+**Batch Uploads** (Janet's ask): up to 300 images + one CSV
 (`filename, brand_name, class_type, alcohol_content, net_contents`). Rows
 without images and images without rows are reported individually rather than
 failing the whole batch. Results are sorted problems-first.
 
-**UI for the whole team** (Dave to Jenny): one screen, two tabs, big type,
+**Universal UI for the Whole Team** (Dave to Jenny): one screen, two tabs, big type,
 drag-and-drop, color-coded verdicts, no configuration. Plain HTML/JS — no
 build step.
 
@@ -123,7 +123,7 @@ firewall, the same code can point at Claude on Azure-adjacent FedRAMP-
 authorized channels (e.g., AWS GovCloud Bedrock) by swapping the client —
 the extraction interface is one function.
 
-## Assumptions & trade-offs
+## Assumptions & Trade-Offs
 
 - **Prototype scope** (per Marcus): no auth, no persistence, nothing stored —
   uploads are processed in memory and discarded.
@@ -138,7 +138,7 @@ the extraction interface is one function.
 - Python 3.9-compatible on purpose (matches conservative government IT
   baselines; it's what ships on current macOS).
 
-## Repository layout
+## Repository Layout
 
 ```
 app/
